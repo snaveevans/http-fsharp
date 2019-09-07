@@ -1,9 +1,9 @@
 module Cranberry.StreamHelper
 
+open Microsoft.FSharp.Control
 open System
 open System.Threading
 open System.Net.Sockets
-open Microsoft.FSharp.Control
 
 let tenMegaBytes = 10000000
 
@@ -13,9 +13,7 @@ let readData (client: TcpClient) = async {
     let data = Array.zeroCreate length
     let cancellationSource = new CancellationTokenSource()
     let asyncResult = (data, 0, length, cancellationSource.Token) |> stream.ReadAsync
-    let async = Async.AwaitIAsyncResult(asyncResult) |> Async.Ignore
-    do! async
-    // stream.Read(data, 0, length) |> ignore
+    do! Async.AwaitIAsyncResult(asyncResult) |> Async.Ignore
     return data
     }
 

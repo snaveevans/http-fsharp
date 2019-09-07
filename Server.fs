@@ -1,10 +1,10 @@
 module Cranberry.Server
 
+open Microsoft.FSharp.Control
 open System
 open System.Threading
 open System.Net
 open System.Net.Sockets
-open Microsoft.FSharp.Control
 open Cranberry.StreamHelper
 
 type Server = TcpListener
