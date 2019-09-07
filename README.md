@@ -1,4 +1,8 @@
 # Cranberry
+Simple http-server written in fsharp using dotnet core
+### RFCs
+- [rfc 2616](https://tools.ietf.org/html/rfc2616)
+- [rfc 7231](https://tools.ietf.org/html/rfc7231)
 
 ## Pipeline
 
