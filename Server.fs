@@ -10,27 +10,23 @@ open Cranberry.StreamHelper
 type Server = TcpListener
 
 let bar = "HTTP/1.1 200 OK
-Server: Suave (https://suave.io)
+Server: Cranberry
 Date: Fri, 06 Sep 2019 21:34:44 GMT
 Content-Type: text/html
-Content-Length: 9
+Content-Length: 17
 
-Hello GET"
+<div>foobar</div>"
 
 let handleClient (client: TcpClient) = async {
-    let! data = client |> readData
-    printfn "Read data %d" data.Length
-    let str = data |> Text.Encoding.UTF8.GetString
-    printfn "Request"
-    printfn "%s" str
+    let! bytes = client |> clientToBytes
+    let request = bytes |> bytesToString |> stringToRequest
+    printfn "%A" request 
     let response = bar |> Text.Encoding.UTF8.GetBytes
-    printfn "Sending response %s" bar
-    (client, response) |> sendData
+    do! (client, response) |> sendData
     client.Close()
-    printfn "Connection closed"
 }
 
-let workflow (server: Server) = async {
+let serve (server: Server) = async {
     while true do
         let! client = server.AcceptTcpClientAsync() |> Async.AwaitTask
         let handler = client |> handleClient
@@ -43,6 +39,6 @@ let createServer (address: string, port: int) =
 
 let startServer (server: Server) =
     server.Start()
-    let work = server |> workflow
+    let work = server |> serve
     Async.RunSynchronously(work)
 
